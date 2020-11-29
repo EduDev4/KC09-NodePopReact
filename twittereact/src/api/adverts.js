@@ -24,3 +24,8 @@ export const createAdvert = advert => {
   const url = `${apiVersion}/adverts`;
   return client.post(url, advert);
 };
+
+export const deleteAdvert = advertId => {
+  const url = `${apiVersion}/adverts/${advertId}`;
+  return client.delete(url);
+};

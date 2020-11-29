@@ -3,7 +3,9 @@ import { Redirect } from 'react-router-dom';
 import Photo from '../shared/Photo';
 import Layout from '../layout';
 
-import { getAdvertDetail } from '../../api/adverts';
+import Button from '../shared/Button';
+
+import { getAdvertDetail, deleteAdvert } from '../../api/adverts';
 /* import Layout from '../layout'; */
 
 class AdvertPage extends React.Component {
@@ -19,6 +21,15 @@ class AdvertPage extends React.Component {
       .catch(error => this.setState({ error }));
   };
 
+  handleDelete = () => {
+    const { advertId } = this.props.match.params;
+    deleteAdvert(advertId)
+      .then(() => {
+        this.setState({ advert: 'deleted' });
+      })
+      .catch(error => this.setState({ error }));
+  };
+
   componentDidMount() {
     this.getAdvertDetail();
   }
@@ -29,13 +40,21 @@ class AdvertPage extends React.Component {
     if (error) {
       return <Redirect to="/404" />;
     }
-    if (!advert) {
+    if (advert && advert === 'deleted') {
+      return <Redirect to="/adverts" />;
+    }
+    if (!advert || !advert.result) {
       return null;
     }
     return (
       <article>
         <div className="left">
-          {<Photo src={advert.result.photo} className="advert-photo" />}
+          {
+            <Photo
+              src={advert && advert.result ? advert.result.photo : ''}
+              className="advert-photo"
+            />
+          }
         </div>
         <div className="right">
           <div className="tweet-header">
@@ -44,7 +63,11 @@ class AdvertPage extends React.Component {
           </div>
           <div>
             {advert.result.tags}
-            <div className="advert-actions"></div>
+            <div className="advert-actions">
+              <Button type="secondary" onClick={this.handleDelete}>
+                Delete Advert
+              </Button>
+            </div>
           </div>
         </div>
       </article>
