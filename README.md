@@ -1,4 +1,4 @@
-# Twittereact
+# NodePopReact
 
 Backend project:
 https://github.com/davidjj76/nodepop_web_avanzado
